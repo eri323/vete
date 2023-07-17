@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema veterinario</title>
+    <link rel="stylesheet" href="./stylevte.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+
+<body style="margin: 80px 120px; background-color: rgb(149, 236, 246);">
+    <div id="A">
+        <div id="titulo">
+            <h1>Sistema de citas</h1>
+        </div>
+        <div id="aa">
+
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem beatae tempore laudantium eos perspiciatis
+                nihil, perferendis itaque id inventore officia nemo exercitationem incidunt dicta, dolor eum repellat
+                velit nam distinctio.</p>
+
+
+
+            <button style="margin: 20px 0px;" data-bs-toggle="modal" data-bs-target="#exampleModal" id="boton"> Crear
+                cita</button>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo registro</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h4 id="Alerta"></h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <label for="">Nombre mascota</label><input type="text" id="nombre">
+
+                            <label for="">Propietario</label><input type="text" id="propietario">
+
+                            <label for="">Telefono</label><input type="number" id="telefono">
+
+                            <label for="">Tipo de animal</label>
+                            <select name="" id="tipo">
+                                <option value=""></option>
+                                <option value="Opcion 1">Gato</option>
+                                <option value="Opcion 2">Perro</option>
+                                <option value="Opcion 3">Ave</option>
+                                <option value="Opcion 4">Pez</option>
+                                <option value="Opcion 5">Reptil</option>
+                            </select>
+
+                            <label for="">Fecha</label><input type="date" id="fecha">
+
+                            <label for="">Hora</label><input type="time" id="hora">
+
+                            <label for="">Sintomas</label><input type="text" id="sinto">
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button onclick="if(validar()) crear(), limpiar()" type="button" class="btn btn-primary"
+                                id="boto">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="bb">
+            <img src="./img1/vet portada.jpg" alt="" id="img1">
+        </div>
+
+        <div id="tarjetas">
+
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+
+
+
+
+
+    let mascotas = [
+        {
+            gato: "./img1/gato.png",
+            perro: "./img1/perro.png",
+            ave: "./img1/ave.png",
+            pez: "./img1/ave.png",
+            reptil: "./img1/reptil.png"
+        }
+
+    ];
+
+    function crear() {
+        let cardsContainer = document.getElementById("tarjetas");
+
+        for (let i = 0; i < mascotas.length; i++) {
+            let mascota = mascotas[i];
+
+            let card = document.createElement("div");
+            card.className = "card";
+            card.id = "tarjeta-" + i;
+            card.style.border = "3px solid rgb(67, 193, 207)";
+            card.style.borderRadius = "20px"
+            let imagen = document.createElement("img");
+            if (document.getElementById("tipo").value == "Opcion 1") {
+                imagen.src = mascota.gato;
+            } else if (document.getElementById("tipo").value == "Opcion 2") {
+                imagen.src = mascota.perro;
+            } else if (document.getElementById("tipo").value == "Opcion 3") {
+                imagen.src = mascota.ave;
+            } else if (document.getElementById("tipo").value == "Opcion 4") {
+                imagen.src = mascota.pez;
+            } else if (document.getElementById("tipo").value == "Opcion 5") {
+                imagen.src = mascota.reptil;
+            }
+            let nombre = document.createElement("h2");
+            nombre.textContent = document.getElementById("nombre").value;
+
+            let propietario = document.createElement("p");
+            propietario.innerHTML = "<strong>Propietario:</strong> " + document.getElementById("propietario").value;
+
+            let telefono = document.createElement("p");
+            telefono.innerHTML = "<strong>Teléfono:</strong> " + document.getElementById("telefono").value;
+
+            let fecha = document.createElement("p");
+            fecha.innerHTML = "<strong>Fecha:</strong> " + document.getElementById("fecha").value;
+
+            let hora = document.createElement("p");
+            hora.innerHTML = "<strong>Hora:</strong> " + document.getElementById("hora").value;
+
+            let tipoSeleccionado = document.getElementById("tipo").value;
+            let tipoSeleccionadoElement = document.createElement("p");
+            tipoSeleccionadoElement.innerHTML = "<strong>Tipo:</strong> " + tipoSeleccionado;
+
+            let sintomas = document.createElement("p");
+            sintomas.innerHTML = "<strong>Síntomas:</strong> " + document.getElementById("sinto").value;
+
+            let modificar = document.createElement("button");
+            modificar.innerHTML = "Modificar"
+            modificar.id = "BT1"
+            modificar.className="bot"
+            modificar.addEventListener("click", function () {
+                mostrarModalModificar(modificar.getAttribute("data-tarjeta-id"));
+            });
+
+            let eliminar = document.createElement("button");
+            eliminar.innerHTML = "Cancelar Cita"
+            eliminar.id = "BT2"
+            eliminar.className= "bot"
+            eliminar.addEventListener("click", function () {
+                eliminarTarjeta(eliminar.getAttribute("data-tarjeta-id"));
+            });
+            eliminar.setAttribute("data-bs-toggle", "modal");
+            eliminar.setAttribute("data-bs-target", "#confirmModal");
+            eliminar.setAttribute("data-tarjeta-id", "tarjeta-" + i);
+            eliminar.setAttribute("data-id", "tarjeta-" + i);
+            card.appendChild(imagen);
+            card.appendChild(nombre);
+            card.appendChild(propietario);
+            card.appendChild(telefono);
+            card.appendChild(fecha);
+            card.appendChild(hora);
+            card.appendChild(tipoSeleccionadoElement);
+            card.appendChild(sintomas);
+            card.appendChild(modificar);
+            card.appendChild(eliminar);
+            cardsContainer.appendChild(card);
+        }
+
+    }
+
+    function limpiar() {
+        document.getElementById("nombre").value = "";
+        document.getElementById("propietario").value = "";
+        document.getElementById("telefono").value = "";
+        document.getElementById("tipo").value = "";
+        document.getElementById("fecha").value = "";
+        document.getElementById("hora").value = "";
+        document.getElementById("sinto").value = "";
+    }
+
+
+    function eliminarTarjeta(tarjetaId) {
+        let tarjeta = document.getElementById(tarjetaId);
+        if (tarjeta) {
+            tarjeta.remove();
+        }
+    }
+
+    function mostrarModalModificar(tarjetaId) {
+        let tarjeta = document.getElementById(tarjetaId);
+        if (tarjeta) {
+            let nombre = tarjeta.querySelector("h2").textContent;
+            let propietario = tarjeta.querySelector("p:nth-child(2)").textContent.replace("Propietario: ", "");
+            let telefono = tarjeta.querySelector("p:nth-child(3)").textContent.replace("Teléfono: ", "");
+            let tipo = tarjeta.querySelector("p:nth-child(6)").textContent.replace("Tipo: ", "");
+            let fecha = tarjeta.querySelector("p:nth-child(4)").textContent.replace("Fecha: ", "");
+            let hora = tarjeta.querySelector("p:nth-child(5)").textContent.replace("Hora: ", "");
+            let sintomas = tarjeta.querySelector("p:nth-child(8)").textContent.replace("Síntomas: ", "");
+
+            document.getElementById("nombre").value = nombre;
+            document.getElementById("propietario").value = propietario;
+            document.getElementById("telefono").value = telefono;
+            document.getElementById("tipo").value = tipo;
+            document.getElementById("fecha").value = fecha;
+            document.getElementById("hora").value = hora;
+            document.getElementById("sinto").value = sintomas;
+
+            // Mostrar el modal
+            let modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+            modal.show();
+        }
+    }
+
+    function validar() {
+        let validacion = true;
+        let hora = document.getElementById("hora").value;
+        let Hmi = new Date();
+        Hmi.setHours(6, 0, 0); // Establece la hora mínima a las 6 am
+
+        let Hma = new Date();
+        Hma.setHours(18, 0, 0); // Establece la hora máxima a las 6 pm
+
+        let Hsel = new Date();
+
+        Hsel.setHours(parseInt(hora.split(":")[0]), parseInt(hora.split(":")[1]), 0);
+
+
+
+        let fecha = new Date(document.getElementById("fecha").value.trim());
+
+        let FA = new Date();
+
+        // Obtiene el día de la semana (domingo: 0, lunes: 1, ..., sábado: 6)
+        let DS = fecha.getDay();
+
+        // Obtiene el día actual
+        let DA = new Date().getDay();
+        if (document.getElementById("nombre").value.trim() === "") {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite un nombre";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+            });
+            validacion = false;
+        }
+
+        else if (document.getElementById("propietario").value.trim() === "") {
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite el propieatario";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+            });
+
+            validacion = false;
+        }
+
+        else if (document.getElementById("telefono").value.trim() === "") {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite numero de telefono";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+            });
+
+            validacion = false;
+        }
+        else if (document.getElementById("telefono").value.trim().length !== 10) {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite 10 numeros para el numero de telefono";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+            });
+
+            validacion = false;
+        }
+
+        else if (document.getElementById("tipo").value.trim() === "") {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite el tipo de mascota";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+
+            });
+            validacion = false;
+        } else if (document.getElementById("fecha").value.trim() === "") {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite la fecha";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+
+            });
+            validacion = false;
+        }
+        /*  else if (fecha.toDateString() === FA.toDateString()) {
+             setTimeout(function () {
+                 Alerta.innerHTML = "Por favor selecciona una fecha diferente a la actual";
+                 Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                 Alerta.style.fontSize = "15px";
+                 Alerta.style.textAlign = "center";
+                 Alerta.style.width = "100%";
+                 Alerta.style.padding = "20px";
+                 Alerta.style.margin = "0";
+                 Alerta.style.border = "3px solid red";
+                 setTimeout(function () {
+                     Alerta.innerHTML = "";
+                     Alerta.style = "";
+                 }, 2000);
+             });
+             validacion = false;
+         } */
+        else if (new Date(fecha) <= FA || DS === 6 || DS === FA) {
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor seleccione una fecha válida";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red";
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000);
+            });
+            validacion = false;
+        }
+        /* else if (DS === 0 || DS === 6) {
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor selecciona una fecha válida (no sábado ni domingo)";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red";
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000);
+            });
+            validacion = false;
+        } 
+ */
+
+        else if (document.getElementById("hora").value.trim() === "") {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite la hora";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+
+            });
+            validacion = false;
+        }
+        else if (Hsel < Hmi || Hsel > Hma) {
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor seleccione una hora válida";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red";
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000);
+            });
+            validacion = false;
+        }
+        else if (document.getElementById("sinto").value.trim() === "") {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Por favor digite los sintomas";
+                Alerta.style.backgroundColor = "rgb(255, 163, 163)";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid red"
+
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000)
+
+            });
+            validacion = false;
+        }
+        else {
+
+            setTimeout(function () {
+                Alerta.innerHTML = "Cita creada exitosamente";
+                Alerta.style.backgroundColor = "#66FF66";
+                Alerta.style.fontSize = "15px";
+                Alerta.style.textAlign = "center";
+                Alerta.style.width = "100%";
+                Alerta.style.padding = "20px";
+                Alerta.style.margin = "0";
+                Alerta.style.border = "3px solid green"
+                setTimeout(function () {
+                    Alerta.innerHTML = "";
+                    Alerta.style = "";
+                }, 2000);
+
+            });
+
+        }
+        return validacion;
+    }
+
+
+
+
+</script>
+
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
