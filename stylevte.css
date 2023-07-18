@@ -16,7 +16,7 @@ body {
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
     justify-content: space-around;
-
+    border: 3px solid rgb(67, 193, 207);
 
 }
 
